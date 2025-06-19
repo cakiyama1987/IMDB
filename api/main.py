@@ -27,7 +27,7 @@ IP_CONTAINER = "localhost"
 
 def get_redis_connection():
     try:
-        return redis.Redis(host=IP_CONTAINER, port=6379, decode_responses=True)
+        return redis.Redis(host='redis_db', port=6379, decode_responses=True)
     except redis.RedisError as e:
         raise HTTPException(status_code=500, detail="Could not connect to Redis")
 

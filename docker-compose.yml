@@ -1,48 +1,56 @@
-# Versão do Docker Compose
-version: '3.8'
-
-# Definição dos serviços (contêineres)
+# docker-compose.yml
 services:
-  # Serviço do Redis (banco em memória)
-  redis:
-    image: redis/redis-stack-server:latest
-    ports:
-      - "6379:6379"
-
-  # Serviço do PostgreSQL (seu Data Warehouse)
   postgres:
     image: postgres:16
+    container_name: postgres_db
     environment:
-      POSTGRES_PASSWORD: minhasenhasecreta  # Defina uma senha forte aqui
+      POSTGRES_PASSWORD: sua-senha-super-segura
+      POSTGRES_DB: metabase_app
     ports:
-      - "5432:5432" # Expõe a porta do Postgres para o seu PC
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Garante que os dados não se percam
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
-  # Serviço da sua API em Python
-  api:
-    build: ./api  # Diz ao Docker para construir a imagem usando o Dockerfile na pasta 'api'
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis_db
     ports:
-      - "5000:5000" # Expõe a porta da API
-    depends_on:
-      - redis # Garante que o Redis inicie antes da API
+      - "6379:6379"
+    restart: unless-stopped
 
-  # Serviço do Metabase (visualização)
+# Em docker-compose.yml
+  api:
+    build: ./api
+    container_name: api_service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    restart: unless-stopped
+
   metabase:
     image: metabase/metabase:latest
+    container_name: metabase_service
     ports:
-      - "3000:3000" # Expõe a porta do Metabase
+      - "3000:3000"
     environment:
-      # Configurações para o Metabase usar o Postgres como seu banco interno
       MB_DB_TYPE: postgres
-      MB_DB_HOST: postgres           # Aponta para o serviço 'postgres' definido acima
+      MB_DB_HOST: postgres_db
       MB_DB_PORT: 5432
       MB_DB_USER: postgres
-      MB_DB_PASS: minhasenhasecreta  # Use a mesma senha definida no serviço do postgres
-      MB_DB_DBNAME: metabase_app     # Nome do banco que o Metabase usará para si
+      MB_DB_PASS: 416349
+      MB_DB_DBNAME: metabase_app
     depends_on:
-      - postgres # Garante que o Postgres inicie antes do Metabase
+      - postgres
+    restart: unless-stopped
 
-# Define o volume para persistir os dados do Postgres
+  etl:
+    build: ./etl
+    container_name: etl_script
+    depends_on:
+      - postgres
+      - redis
+
 volumes:
   postgres_data:

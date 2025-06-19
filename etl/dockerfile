@@ -1,0 +1,12 @@
+# etl/Dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Altere o nome do arquivo se o seu script de ETL tiver outro nome
+CMD ["python", "pool-pilha-rodar-fora-container.py"]

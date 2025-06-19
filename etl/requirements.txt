@@ -1,2 +1,3 @@
-redis
-psycopg2
+# etl/requirements.txt
+redis==4.3.4
+psycopg2-binary==2.9.9
