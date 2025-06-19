@@ -4,9 +4,9 @@ services:
     image: postgres:16
     container_name: postgres_db
     environment:
-      POSTGRES_PASSWORD: sua-senha-super-segura
-      POSTGRES_DB: metabase_app
-    ports:
+      POSTGRES_PASSWORD: '123456'
+      POSTGRES_DB: postgres
+    ports:exit
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -39,7 +39,7 @@ services:
       MB_DB_HOST: postgres_db
       MB_DB_PORT: 5432
       MB_DB_USER: postgres
-      MB_DB_PASS: 416349
+      MB_DB_PASS: '123456'
       MB_DB_DBNAME: metabase_app
     depends_on:
       - postgres
