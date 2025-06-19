@@ -1,0 +1,9 @@
+docker-compose down -v (baixa o Docker)
+docker-compose up -d (sobe todos os serviços)
+docker-compose up -d api redis (sobe apenas serviços api e redis)
+docker-compose up -d metabase postgres (sobe apenas serviços de metabase e postgres)
+docker-compose up --build etl (inicia o ETL)
+
+
+porta 3000 metabase - onde faz os dashs
+porta 5000 api para inserção de dados.
