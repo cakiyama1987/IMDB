@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./db_init:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
   redis:
@@ -40,7 +41,7 @@ services:
       MB_DB_PORT: 5432
       MB_DB_USER: postgres
       MB_DB_PASS: '123456'
-      MB_DB_DBNAME: metabase_app
+      MB_DB_DBNAME: postgres
     depends_on:
       - postgres
     restart: unless-stopped
